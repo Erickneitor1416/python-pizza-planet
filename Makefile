@@ -17,5 +17,9 @@ migrate:
 	$(PYTHON) $(MANAGE_PY) db init
 	$(PYTHON) $(MANAGE_PY) db migrate
 	$(PYTHON) $(MANAGE_PY) db upgrade
+
+update-migrate:
+	$(PYTHON) $(MANAGE_PY) db migrate
+	$(PYTHON) $(MANAGE_PY) db upgrade
     
 
