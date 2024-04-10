@@ -21,5 +21,6 @@ migrate:
 update-migrate:
 	$(PYTHON) $(MANAGE_PY) db migrate
 	$(PYTHON) $(MANAGE_PY) db upgrade
-    
 
+populate-db:
+	$(PYTHON) $(MANAGE_PY) populate
