@@ -27,3 +27,6 @@ populate-db:
 
 test-cov:
 	pytest --cache-clear --cov-report term-missing --cov=app app/test/ > pytest-coverage.txt
+
+active-env:
+	poetry shell
