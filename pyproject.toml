@@ -6,7 +6,7 @@ authors = ["Erickneitor1416 <erick.munoz@epn.edu.ec>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "3.8.x"
+python = ">=3.8"
 alembic = "1.7.5"
 attrs = "21.4.0"
 autopep8 = "1.6.0"
@@ -42,6 +42,7 @@ sqlalchemy = "1.4.31"
 toml = "0.10.2"
 werkzeug = "2.0.2"
 zipp = "3.7.0"
+faker = "^24.8.0"
 
 
 [build-system]
