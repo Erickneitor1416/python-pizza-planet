@@ -26,7 +26,7 @@ populate-db:
 	$(PYTHON) $(MANAGE_PY) populate
 
 test-cov:
-	poetry run pytest --cache-clear --cov-report term-missing --cov=app app/test/ > pytest-coverage.txt
+	poetry run pytest --cache-clear --cov=app ./app/test/ > pytest-coverage.txt
 
 active-env:
 	poetry shell
