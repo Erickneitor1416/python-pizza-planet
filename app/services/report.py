@@ -1,14 +1,15 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint
 
 from app.common.http_methods import GET
-from app.controllers import ReportController
+from app.common.service_injector import get_singleton_service
+from app.services.base import AbstractReportService
+from app.services.service_type import ServiceType
 
-report = Blueprint("report", __name__)
+report = Blueprint(ServiceType.REPORT.value, __name__)
+inject_service = get_singleton_service(ServiceType.REPORT)
 
 
 @report.route("/", methods=GET)
-def get_report():
-    report, error = ReportController.get_report()
-    response = report if not error else {"error": error}
-    status_code = 200 if report else 404 if not error else 400
-    return jsonify(response), status_code
+@inject_service
+def get_report(service: AbstractReportService):
+    return service.get_report()

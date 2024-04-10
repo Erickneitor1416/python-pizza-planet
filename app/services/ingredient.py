@@ -1,38 +1,33 @@
+from flask import Blueprint, request
+
 from app.common.http_methods import GET, POST, PUT
-from flask import Blueprint, jsonify, request
+from app.common.service_injector import get_singleton_service
+from app.services.base import AbstractBaseService
+from app.services.service_type import ServiceType
 
-from ..controllers import IngredientController
-
-ingredient = Blueprint('ingredient', __name__)
-
-
-@ingredient.route('/', methods=POST)
-def create_ingredient():
-    ingredient, error = IngredientController.create(request.json)
-    response = ingredient if not error else {'error': error}
-    status_code = 200 if not error else 400
-    return jsonify(response), status_code
+ingredient = Blueprint(ServiceType.INGREDIENT.value, __name__)
+inject_service = get_singleton_service(ServiceType.INGREDIENT)
 
 
-@ingredient.route('/', methods=PUT)
-def update_ingredient():
-    ingredient, error = IngredientController.update(request.json)
-    response = ingredient if not error else {'error': error}
-    status_code = 200 if not error else 400
-    return jsonify(response), status_code
+@ingredient.route("/", methods=POST)
+@inject_service
+def create_ingredient(service: AbstractBaseService):
+    return service.create(request.json)
 
 
-@ingredient.route('/id/<_id>', methods=GET)
-def get_ingredient_by_id(_id: int):
-    ingredient, error = IngredientController.get_by_id(_id)
-    response = ingredient if not error else {'error': error}
-    status_code = 200 if ingredient else 404 if not error else 400
-    return jsonify(response), status_code
+@ingredient.route("/", methods=PUT)
+@inject_service
+def update_ingredient(service: AbstractBaseService):
+    return service.update(request.json)
 
 
-@ingredient.route('/', methods=GET)
-def get_ingredients():
-    ingredients, error = IngredientController.get_all()
-    response = ingredients if not error else {'error': error}
-    status_code = 200 if ingredients else 404 if not error else 400
-    return jsonify(response), status_code
+@ingredient.route("/id/<_id>", methods=GET)
+@inject_service
+def get_ingredient_by_id(service: AbstractBaseService, _id: int):
+    return service.get_by_id(_id)
+
+
+@ingredient.route("/", methods=GET)
+@inject_service
+def get_ingredients(service: AbstractBaseService):
+    return service.get_all()

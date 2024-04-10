@@ -1,30 +1,27 @@
+from flask import Blueprint, request
+
 from app.common.http_methods import GET, POST
-from flask import Blueprint, jsonify, request
+from app.common.service_injector import get_singleton_service
+from app.services.base import AbstractBaseService
+from app.services.service_type import ServiceType
 
-from ..controllers import OrderController
-
-order = Blueprint('order', __name__)
-
-
-@order.route('/', methods=POST)
-def create_order():
-    order, error = OrderController.create(request.json)
-    response = order if not error else {'error': error}
-    status_code = 200 if not error else 400
-    return jsonify(response), status_code
+order = Blueprint(ServiceType.ORDER.value, __name__)
+inject_service = get_singleton_service(ServiceType.ORDER)
 
 
-@order.route('/id/<_id>', methods=GET)
-def get_order_by_id(_id: int):
-    order, error = OrderController.get_by_id(_id)
-    response = order if not error else {'error': error}
-    status_code = 200 if order else 404 if not error else 400
-    return jsonify(response), status_code
+@order.route("/", methods=POST)
+@inject_service
+def create_order(service: AbstractBaseService):
+    return service.create(request.json)
 
 
-@order.route('/', methods=GET)
-def get_orders():
-    orders, error = OrderController.get_all()
-    response = orders if not error else {'error': error}
-    status_code = 200 if orders else 404 if not error else 400
-    return jsonify(response), status_code
+@order.route("/id/<_id>", methods=GET)
+@inject_service
+def get_order_by_id(service: AbstractBaseService, _id: int):
+    return service.get_by_id(_id)
+
+
+@order.route("/", methods=GET)
+@inject_service
+def get_orders(service: AbstractBaseService):
+    return service.get_all()

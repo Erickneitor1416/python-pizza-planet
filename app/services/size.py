@@ -1,39 +1,34 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, request
 
 from app.common.http_methods import GET, POST, PUT
+from app.common.service_injector import get_singleton_service
+from app.services.base import AbstractBaseService
+from app.services.service_type import ServiceType
 
-from ..controllers import SizeController
+size = Blueprint(ServiceType.SIZE.value, __name__)
 
-size = Blueprint("size", __name__)
+inject_service = get_singleton_service(ServiceType.SIZE)
 
 
 @size.route("/", methods=POST)
-def create_size():
-    size, error = SizeController.create(request.json)
-    response = size if not error else {"error": error}
-    status_code = 200 if not error else 400
-    return jsonify(response), status_code
+@inject_service
+def create_size(service: AbstractBaseService):
+    return service.create(request.json)
 
 
 @size.route("/", methods=PUT)
-def update_size():
-    size, error = SizeController.update(request.json)
-    response = size if not error else {"error": error}
-    status_code = 200 if not error else 400
-    return jsonify(response), status_code
+@inject_service
+def update_size(service: AbstractBaseService):
+    return service.update(request.json)
 
 
 @size.route("/id/<_id>", methods=GET)
-def get_size_by_id(_id: int):
-    size, error = SizeController.get_by_id(_id)
-    response = size if not error else {"error": error}
-    status_code = 200 if size else 404 if not error else 400
-    return jsonify(response), status_code
+@inject_service
+def get_size_by_id(service: AbstractBaseService, _id: int):
+    return service.get_by_id(_id)
 
 
 @size.route("/", methods=GET)
-def get_all_sizes():
-    sizes, error = SizeController.get_all()
-    response = sizes if not error else {"error": error}
-    status_code = 200 if sizes else 404 if not error else 400
-    return jsonify(response), status_code
+@inject_service
+def get_all_sizes(service: AbstractBaseService):
+    return service.get_all()
