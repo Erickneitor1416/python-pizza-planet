@@ -11,7 +11,7 @@ run:
 	$(PYTHON) $(MANAGE_PY) run
 
 test:
-	$(PYTHON) $(MANAGE_PY) test
+	poetry run $(PYTHON) $(MANAGE_PY) test
     
 migrate:
 	$(PYTHON) $(MANAGE_PY) db init
@@ -24,3 +24,9 @@ update-migrate:
 
 populate-db:
 	$(PYTHON) $(MANAGE_PY) populate
+
+test-cov:
+	poetry run pytest --cache-clear --cov=app ./app/test/ > pytest-coverage.txt
+
+active-env:
+	poetry shell
