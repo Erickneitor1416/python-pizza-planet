@@ -2,7 +2,7 @@ from flask import Blueprint, request
 
 from app.common.http_methods import GET, POST, PUT
 from app.common.service_injector import get_singleton_service
-from app.services.base import AbstractBaseService, AbstractService
+from app.services.base import AbstractBaseService
 from app.services.service_type import ServiceType
 
 size = Blueprint(ServiceType.SIZE.value, __name__)

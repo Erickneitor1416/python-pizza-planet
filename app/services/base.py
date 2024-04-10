@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Tuple
+from typing import Any, Optional, Tuple
 
-from flask import jsonify, Response
+from flask import Response, jsonify
 
 from app.controllers import BaseController
 
@@ -9,7 +9,7 @@ from app.controllers import BaseController
 class AbstractService(ABC):
     @staticmethod
     def _generate_response(
-            value: Dict[str, Any], error: str
+        value: Tuple[Response, str], error: str
     ) -> Tuple[Response, int]:
         response = value if not error else {"error": error}
         status_code = 200 if value else 404 if not error else 400
@@ -18,25 +18,25 @@ class AbstractService(ABC):
 
 class AbstractReportService(AbstractService):
     @abstractmethod
-    def get_report(self) -> Tuple[Dict[str, Any], int]:
+    def get_report(self) -> Tuple[Response, int]:
         pass
 
 
 class AbstractBaseService(AbstractService):
     @abstractmethod
-    def create(self, data: Dict[str, Any]) -> Tuple[Dict[str, Any], int]:
+    def create(self, data: Optional[Any]) -> Tuple[Response, int]:
         pass
 
     @abstractmethod
-    def update(self, data: Dict[str, Any]) -> Tuple[Dict[str, Any], int]:
+    def update(self, data: Optional[Any]) -> Tuple[Response, int]:
         pass
 
     @abstractmethod
-    def get_by_id(self, _id: int) -> Tuple[Dict[str, Any], int]:
+    def get_by_id(self, _id: int) -> Tuple[Response, int]:
         pass
 
     @abstractmethod
-    def get_all(self) -> Tuple[Dict[str, Any], int]:
+    def get_all(self) -> Tuple[Response, int]:
         pass
 
 
@@ -44,11 +44,11 @@ class BaseService(AbstractBaseService):
     def __init__(self, controller: BaseController):
         self.controller = controller
 
-    def create(self, data: Dict[str, Any]) -> Tuple[Response, int]:
+    def create(self, data: Optional[Any]) -> Tuple[Response, int]:
         value, error = self.controller.create(data)
         return self._generate_response(value, error)
 
-    def update(self, data: Dict[str, Any]) -> Tuple[Response, int]:
+    def update(self, data: Optional[Any]) -> Tuple[Response, int]:
         value, error = self.controller.update(data)
         return self._generate_response(value, error)
 
