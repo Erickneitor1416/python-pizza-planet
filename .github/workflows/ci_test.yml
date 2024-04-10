@@ -27,7 +27,7 @@ jobs:
 
       - name: Run test coverage
         run: |
-          make test-cov
+          poetry run pytest --cache-clear --cov=app ./app/test/ > pytest-coverage.txt
 
       - name: Comment coverage
         uses: coroo/pytest-coverage-commentator@v1.0.2
