@@ -26,4 +26,4 @@ populate-db:
 	$(PYTHON) $(MANAGE_PY) populate
 
 test-cov:
-	pytest --cache-clear --cov-report term-missing --cov=app app/test/ > coverage.txt
+	pytest --cache-clear --cov-report term-missing --cov=app app/test/ > pytest-coverage.txt

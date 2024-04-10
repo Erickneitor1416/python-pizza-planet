@@ -1,0 +1,33 @@
+name: ci_test
+
+on:
+  pull_request:
+    branches: ["main"]
+  push:
+
+jobs:
+  Tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.8.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.8.10
+
+      - name: Install dependencies
+        run: |
+          pip install poetry
+          poetry install --with ci
+
+      - name: Run tests with pytest
+        run: make test
+
+      - name: Run test coverage
+        run: |
+          make test-cov
+
+      - name: Comment coverage
+        uses: coroo/pytest-coverage-commentator@v1.0.2
