@@ -24,3 +24,6 @@ update-migrate:
 
 populate-db:
 	$(PYTHON) $(MANAGE_PY) populate
+
+test-cov:
+	pytest --cache-clear --cov-report term-missing --cov=app app/test/ > coverage.txt
