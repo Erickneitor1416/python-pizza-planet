@@ -18,6 +18,7 @@ You will need the following general tools:
 - A Python interpreter installed. [3.8.x](https://www.python.org/downloads/release/python-3810/) is preffered.
 
 - A text editor: preferably [Visual Studio Code](https://code.visualstudio.com/download)
+- Poetry installed. You can install it from [here](https://python-poetry.org/docs/#installation).
 
 - Extensions such as [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python) and [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)
 
@@ -29,46 +30,40 @@ You will need the following general tools:
 git clone https://github.com/ioet/python-pizza-planet.git
 ```
 
-- Create a virtual environment in the root folder of the project
+- Install all necessary dependencies and create a virtual environment in the root folder of the project
 
 ```bash
-python3 -m venv venv
+poetry install
 ```
 
 - Activate the virtual environment (In vscode if you select the virtual env for your project it will activate once you open a new console window)
 
-_For linux/MacOS users:_
-
 ```bash
-source venv/bin/activate 
-```
-
-_For windows users:_
-
-```cmd
-\path\to\env\Scripts\activate
-```
-
-- Install all necessary dependencies:
-
-```bash
-pip3 install -r requirements.txt
+make active-env
 ```
 
 - Start the database (Only needed for the first run):
 
 ```bash
-python3 manage.py db init
-python3 manage.py db migrate
-python3 manage.py db upgrade
+make migrate
 ```
 
+- Update the database schema (Only needed if you have made changes to the models):
+
+```bash
+make update-migrate
+```
+- Seed the database (Only needed if you want to populate the database with some fake data):
+
+```bash
+make populate-db
+```
 - If you want to use the hot reload feature set FLASK_ENV before running the project:
 
 _For linux/MacOS users:_
 
 ```bash
-export FLASK_ENV=development 
+export FLASK_ENV=development
 ```
 
 _For windows users:_
@@ -80,7 +75,7 @@ set FLASK_ENV=development
 - Run the project with:
 
 ```bash
-python3 manage.py run
+make run
 ```
 
 ## Running the frontend
@@ -105,10 +100,19 @@ ext install ritwickdey.LiveServer
 
 ### Testing the backend
 
-- Make sure that you have `pytest` installed
+- Make sure that you have `pytest` and `pytest-cov` installed
 
 - Run the test command
 
 ```bash
-python3 manage.py test
+make test
 ```
+##### Testing coverage
+
+- To get the test coverage, run the following command:
+
+```bash
+make test-coverage
+```
+## Plan to deploy diagram
+![plan diagram](docs/diagrams/deploy_plan_diagram.png)
